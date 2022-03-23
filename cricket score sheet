@@ -1,0 +1,252 @@
+########
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<conio.h>
+struct player
+{
+char energy[40]; //player energy
+char batsman[40]; //batsman name
+char bowler[10]; //bowler name
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 18
+int runs; //runs scored
+struct player *next;//Next node pointer
+};
+typedef struct player PLA;
+PLA *h;
+void load(); //Read file data and create a linked list
+void save(); //Write the data in the linked list to the file
+void add(PLA *p); //Add player nodes in the linked list
+void del(char *s); //Delete the player node with the specified name in the linked list
+void update(); //Update the data in the player node in the linked list
+void browse(); //Display all node data in the linked list on the screen
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 19
+void menu(); //Display system main menu
+void delpla(); //Delete player
+void addpla(); //Add player
+void main(void)
+{
+int op;//operation
+h =(PLA *)malloc(sizeof(PLA)); //Create the head node of the linked list
+h->next = NULL; //Initialize the next node pointer in the head node of the linked list to NULL
+menu();
+scanf("%d",&op);
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 20
+while(op!=0)
+{
+switch(op)
+{
+case 1:
+load();
+break;
+case 2:
+save();
+break;
+case 3:
+addpla();
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 21
+break;
+case 4:
+delpla();
+break;
+case 5:
+update();
+break;
+case 6:
+browse();
+break;
+}
+menu();
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 22
+scanf("%d",&op);
+}
+}
+//Display system main menu function
+void menu()
+{
+printf(" Main Menu\n");
+printf(" welcome to cricket score sheet \n");
+printf(" * 0:quit 1 :load * \n");
+printf(" * 2:save 3 :add * \n");
+printf(" * 4:delete 5 :update * \n");
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 23
+printf(" * 6:browse 7 :default* \n");
+printf(" ********************** \n");
+}
+4.2 MODULE FUNCTIONALITY 2
+In this part we are creating the file using the files concept here we will get the advantage of storing the data using the pointers.Even we are creating the linked list .for the data to be retrieved we are using the load function which is necessary after quitting the function.
+//Read file data and create linked list function
+void load()
+{
+FILE *fp;
+char ch;
+fp = fopen("data.txt","r");
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 24
+if(fp==NULL)
+{
+printf("Error opening file, press any to return to the main menu\n");
+getch();//The program stops and waits for input
+return;
+}
+while(!feof(fp))
+{
+PLA *node =(PLA *)malloc(sizeof(PLA));
+node->next = NULL;
+fscanf(fp,"%s%s%s%d",node->energy,node->batsman,node->bowler,&node->runs);//Read a line of player information from the file
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 25
+add(node); // Call function to increase linked list node
+}
+fclose(fp);
+}
+//Function to add player nodes in the linked list
+void add(PLA *p)
+{
+PLA *q;
+q = h->next; //Point the q pointer to the first player node in the linked list
+if(q==NULL) //If the q pointer is NULL, it means that the current linked list is empty
+{
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 26
+h->next = p; //The node pointed to by the p pointer is the first node in the linked list
+p->next = NULL;
+}
+else
+{
+while(q->next!=NULL) //Find the last node in the linked list through the while loop
+{
+q = q ->next;
+}
+q->next = p; //Point the next pointer of the last node pointed to by the q pointer to the new node
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 27
+p->next =NULL; //Now the p pointer points to the last node, so the next pointer of the node is set to NULL
+}
+}
+//Add player function
+void addpla()
+{
+PLA *node;
+node = (PLA *)malloc(sizeof(PLA));
+node->next = NULL;
+printf("input the players energy batsman bowler runs:\n");
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 28
+scanf("%s%s%s%d",node->energy,node->batsman,node->bowler,&node->runs);
+add(node);
+}
+//Delete player function
+void delpla()
+{
+char batsman[40];
+printf("input del batsman:\n");
+scanf("%s",batsman);
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 29
+del(batsman);
+}
+4.3 MODULE FUNCTIONALITY
+For updating the data here we are using the browse function to display the output after giving the input for the function by means of adding the player to the recent match
+//Display the data function of all player nodes in the linked list on the screen
+void browse()
+{
+PLA *node;
+node = h->next; //node pointer points to the first node of the linked list
+printf(" players energy batsman bowler runs \n");
+while(node) //Traverse the linked list
+{
+printf("\n");
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 30
+printf("ENERGY:%12s\nBATSMAN:%6s\nRUNS:%5d\nBOWLER:%4s\n",node->energy,node->batsman,node->runs,node->bowler);
+node = node->next; //node pointer points to the next player node
+}
+printf("\n");
+}
+4.4 MODULE FUNCTIONALITY
+Here the function will help to
+//The function to write the data in the linked list to the file
+void save()
+{
+FILE *fp;
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 31
+PLA *node;
+fp = fopen("data.txt","w"); //Open the file by writing
+node = h->next; //node pointer points to the first node of the linked list
+while(node!=NULL)
+{ //"%s %s %s %d\n" there are spaces between format characters
+fprintf(fp,"%s %s %s %d\n",node->energy,node->batsman,node->bowler,node->runs);
+node = node ->next;
+}
+fclose(fp);
+}
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 32
+//Function to delete player nodes
+void del(char *s)
+{
+PLA *p,*q;
+p = h->next;//The first node in the linked list p->next=p->next->next;
+q = p->next;//The second node in the linked list
+if(strcmp(s,p->batsman)==0)
+{h->next=p->next;
+free(p);
+return;
+}
+while(q!=NULL)
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 33
+{
+if(strcmp(s,q->batsman)==0)
+{
+p->next = q->next;
+free(q);
+break;
+}
+p = q;
+q = q->next;
+}
+}
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 34
+//Update the function of the player node
+void update()
+{
+char batsman[40];
+int flag = 0;
+PLA *p;
+printf("input the batsman:\n");
+scanf("%s",batsman);
+p = h->next;
+while(p!=NULL)
+{
+if(strcmp(batsman,p->batsman)==0)
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 35
+{
+printf("input the runs:\n");
+scanf("%d",&p->runs);
+printf("input the bowler:\n");
+getchar();
+scanf("%c",&p->bowler);
+flag = 1;
+break;
+}
+p=p->next;
+}
+CRICKET SCORE SHEET
+Dept of CSE,NHCE Page 36
+if(flag==0)
+{
+printf("error username\n");
+}
+}
+5 .
